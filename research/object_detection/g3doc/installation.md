@@ -4,7 +4,7 @@
 
 Tensorflow Object Detection API depends on the following libraries:
 
-*   Protobuf 3.0.0
+*   Protobuf 3+
 *   Python-tk
 *   Pillow 1.0
 *   lxml
@@ -13,7 +13,6 @@ Tensorflow Object Detection API depends on the following libraries:
 *   Matplotlib
 *   Tensorflow
 *   Cython
-*   contextlib2
 *   cocoapi
 
 For detailed steps to install Tensorflow, follow the [Tensorflow installation
@@ -31,27 +30,20 @@ The remaining libraries can be installed on Ubuntu 16.04 using via apt-get:
 
 ``` bash
 sudo apt-get install protobuf-compiler python-pil python-lxml python-tk
-pip install --user Cython
-pip install --user contextlib2
-pip install --user jupyter
-pip install --user matplotlib
+sudo pip install Cython
+sudo pip install jupyter
+sudo pip install matplotlib
 ```
 
 Alternatively, users can install dependencies using pip:
 
 ``` bash
-pip install --user Cython
-pip install --user contextlib2
-pip install --user pillow
-pip install --user lxml
-pip install --user jupyter
-pip install --user matplotlib
+sudo pip install Cython
+sudo pip install pillow
+sudo pip install lxml
+sudo pip install jupyter
+sudo pip install matplotlib
 ```
-
-Note that sometimes "sudo apt-get install protobuf-compiler" will install
-Protobuf 3+ versions for you and some users have issues when using 3.5.
-If that is your case, you're suggested to download and install Protobuf 3.0.0
-(available [here](https://github.com/google/protobuf/releases/tag/v3.0.0)).
 
 ## COCO API installation
 
@@ -99,8 +91,7 @@ export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 
 Note: This command needs to run from every new terminal you start. If you wish
 to avoid running this manually, you can add it as a new line to the end of your
-~/.bashrc file, replacing \`pwd\` with the absolute path of
-tensorflow/models/research on your system.
+~/.bashrc file.
 
 # Testing the Installation
 

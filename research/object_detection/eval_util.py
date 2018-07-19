@@ -306,6 +306,9 @@ def _run_checkpoint_once(tensor_dict,
           # add_single_ground_truth_image_info expects a single image. Fix
           evaluator.add_single_ground_truth_image_info(
               image_id=batch, groundtruth_dict=result_dict)
+          #print("result dict in eval_util.py at line 309")
+          print(result_dict["groundtruth_classes"])              
+          print(batch)
           evaluator.add_single_detected_image_info(
               image_id=batch, detections_dict=result_dict)
       logging.info('Running eval batches done.')
@@ -426,7 +429,7 @@ def repeated_checkpoint_run(tensor_dict,
                                                   losses_dict=losses_dict)
       write_metrics(metrics, global_step, summary_dir)
     number_of_evaluations += 1
-
+    logging.info("Number of evaluations is: " + str(number_of_evaluations) + " when max_number_of_evaluations is: " + str(max_number_of_evaluations))
     if (max_number_of_evaluations and
         number_of_evaluations >= max_number_of_evaluations):
       logging.info('Finished evaluation!')
@@ -556,16 +559,8 @@ def result_dict_for_single_example(image,
 
   if groundtruth:
     if input_data_fields.groundtruth_instance_masks in groundtruth:
-      masks = groundtruth[input_data_fields.groundtruth_instance_masks]
-      masks = tf.expand_dims(masks, 3)
-      masks = tf.image.resize_images(
-          masks,
-          image_shape[1:3],
-          method=tf.image.ResizeMethod.NEAREST_NEIGHBOR,
-          align_corners=True)
-      masks = tf.squeeze(masks, 3)
       groundtruth[input_data_fields.groundtruth_instance_masks] = tf.cast(
-          masks, tf.uint8)
+          groundtruth[input_data_fields.groundtruth_instance_masks], tf.uint8)
     output_dict.update(groundtruth)
     if scale_to_absolute:
       groundtruth_boxes = groundtruth[input_data_fields.groundtruth_boxes]
@@ -649,3 +644,5 @@ def get_eval_metric_ops_for_evaluators(evaluation_metrics,
                        'Found {} in the evaluation metrics'.format(metric))
 
   return eval_metric_ops
+
+

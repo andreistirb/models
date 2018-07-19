@@ -137,6 +137,12 @@ def compute_cor_loc(num_gt_imgs_per_class,
     corloc_per_class: A float numpy array represents the corloc score of each
       class
   """
+  print("-------------------------Images correctly detected per class-------------------------")
+  print(num_images_correctly_detected_per_class)
+  print("-------------------------num gt imgs per class----------------------------------------")
+  print(num_gt_imgs_per_class)
+  
+  
   return np.where(
       num_gt_imgs_per_class == 0, np.nan,
       num_images_correctly_detected_per_class / num_gt_imgs_per_class)

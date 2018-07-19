@@ -525,8 +525,8 @@ class OpenImagesDetectionChallengeEvaluator(OpenImagesDetectionEvaluator):
         standard_fields.InputDataFields.groundtruth_classes: integer numpy array
           of shape [num_boxes] containing 1-indexed groundtruth classes for the
           boxes.
-        standard_fields.InputDataFields.groundtruth_image_classes: integer 1D
-          numpy array containing all classes for which labels are verified.
+        standard_fields.InputDataFields.verified_labels: integer 1D numpy array
+          containing all classes for which labels are verified.
         standard_fields.InputDataFields.groundtruth_group_of: Optional length
           M numpy boolean array denoting whether a groundtruth box contains a
           group of instances.
@@ -541,7 +541,7 @@ class OpenImagesDetectionChallengeEvaluator(OpenImagesDetectionEvaluator):
         self._label_id_offset)
     self._evaluatable_labels[image_id] = np.unique(
         np.concatenate(((groundtruth_dict.get(
-            standard_fields.InputDataFields.groundtruth_image_classes,
+            standard_fields.InputDataFields.verified_labels,
             np.array([], dtype=int)) - self._label_id_offset),
                         groundtruth_classes)))
 
@@ -656,6 +656,7 @@ class ObjectDetectionEvaluation(object):
                                          groundtruth_is_difficult_list=None,
                                          groundtruth_is_group_of_list=None,
                                          groundtruth_masks=None):
+    #print("intra in add_single_ground_truth_image_info")
     """Adds groundtruth for a single image to be used for evaluation.
 
     Args:
@@ -703,6 +704,7 @@ class ObjectDetectionEvaluation(object):
   def add_single_detected_image_info(self, image_key, detected_boxes,
                                      detected_scores, detected_class_labels,
                                      detected_masks=None):
+    #print("intra in add single detected image info")
     """Adds detections for a single image to be used for evaluation.
 
     Args:
@@ -801,8 +803,13 @@ class ObjectDetectionEvaluation(object):
           groundtruth_class_labels[groundtruth_is_group_of_list] == class_index)
       self.num_gt_instances_per_class[
           class_index] += num_gt_instances + num_groupof_gt_instances
+      #print("Class index at object_detection_evaluation.py, line 806 is " + str(class_index))
+      #print("self.num_gt_imgs_per_class--------------------------")
       if np.any(groundtruth_class_labels == class_index):
         self.num_gt_imgs_per_class[class_index] += 1
+      #print(self.num_gt_imgs_per_class)
+      #print("self.num_gt_instances+per_class: -----------------------------------")
+      #print(self.num_gt_instances_per_class)
 
   def evaluate(self):
     """Compute evaluation result.
@@ -839,9 +846,6 @@ class ObjectDetectionEvaluation(object):
       if self.use_weighted_mean_ap:
         all_scores = np.append(all_scores, scores)
         all_tp_fp_labels = np.append(all_tp_fp_labels, tp_fp_labels)
-      print 'Scores and tpfp per class label: {}'.format(class_index)
-      print tp_fp_labels
-      print scores
       precision, recall = metrics.compute_precision_recall(
           scores, tp_fp_labels, self.num_gt_instances_per_class[class_index])
       self.precisions_per_class.append(precision)
